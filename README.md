@@ -8,6 +8,11 @@
 
 From **March 13–28, 2026**, Anthropic is doubling usage limits for Claude users during off-peak hours.
 
+
+<img width="1233" height="909" alt="Screenshot 2026-03-17 at 4 06 18 AM" src="https://github.com/user-attachments/assets/30c0d4c8-6179-4306-a32a-2f51dcac5851" />
+
+
+
 ---
 
 ## Features
