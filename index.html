@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>2x Usage · Claude March Promo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Instrument+Sans:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --bg: #0a0a0a;
+    --surface: #111111;
+    --border: #1f1f1f;
+    --accent: #b8ff57;
+    --accent2: #57e5ff;
+    --text: #f0ede6;
+    --muted: #666;
+    --green: #22c55e;
+    --red: #ef4444;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Instrument Sans', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* noise grain overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 999;
+    opacity: .4;
+  }
+
+  /* NAV */
+  nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.25rem 2rem;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    background: rgba(10,10,10,.92);
+    backdrop-filter: blur(12px);
+    z-index: 100;
+  }
+  .nav-logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 1rem;
+    letter-spacing: -.02em;
+    color: var(--text);
+    text-decoration: none;
+  }
+  .nav-logo span { color: var(--accent); }
+  .nav-pill {
+    font-size: .7rem;
+    font-weight: 500;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    padding: .35rem .9rem;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: .4rem;
+  }
+  .live-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--green);
+    animation: blink 1.6s ease-in-out infinite;
+  }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.2} }
+
+  /* HERO */
+  .hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 2.5rem 2rem 1.5rem;
+    animation: fadeUp .5s ease both;
+  }
+  .hero h1 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: clamp(1.5rem, 4vw, 2rem);
+    line-height: 1.1;
+    letter-spacing: -.03em;
+    color: var(--text);
+  }
+  .hero h1 .accent { color: var(--accent); }
+  .hero-sub {
+    font-size: .82rem;
+    color: var(--muted);
+    max-width: 360px;
+    margin: .5rem auto 0;
+    line-height: 1.5;
+  }
+  @keyframes fadeUp {
+    from { opacity:0; transform: translateY(16px); }
+    to   { opacity:1; transform: translateY(0); }
+  }
+
+  /* STATUS CARD */
+  .status-section {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 0 1.5rem 2.5rem;
+    animation: fadeUp .5s .15s ease both;
+  }
+  .status-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+    transition: border-color .4s;
+  }
+  .status-card.is-active { border-color: rgba(184,255,87,.35); }
+  .status-card.is-peak   { border-color: rgba(239,68,68,.25); }
+  .status-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    transition: background .4s;
+  }
+  .status-card.is-active::before { background: linear-gradient(90deg,transparent,rgba(184,255,87,.5),transparent); }
+  .status-card.is-peak::before   { background: linear-gradient(90deg,transparent,rgba(239,68,68,.4),transparent); }
+  .status-card.is-weekend::before{ background: linear-gradient(90deg,transparent,rgba(102,102,102,.3),transparent); }
+
+  .status-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.25rem;
+  }
+  .status-label {
+    font-size: .62rem;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .status-badge {
+    font-size: .68rem;
+    font-weight: 500;
+    letter-spacing: .08em;
+    padding: .28rem .75rem;
+    border-radius: 999px;
+    display: flex; align-items: center; gap: .35rem;
+  }
+  .badge-active { background: rgba(34,197,94,.15); color: #4ade80; border: 1px solid rgba(34,197,94,.3); }
+  .badge-peak   { background: rgba(239,68,68,.12);  color: #f87171; border: 1px solid rgba(239,68,68,.25); }
+  .badge-weekend{ background: rgba(102,102,102,.15); color: var(--muted); border: 1px solid var(--border); }
+
+  .status-main {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: .4rem;
+  }
+  .status-desc {
+    font-size: .82rem;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  /* BIG INNER COUNTDOWN */
+  .inner-cd {
+    margin: 1.5rem 0 1.25rem;
+    padding: 1.5rem;
+    border-radius: 14px;
+    background: rgba(255,255,255,.03);
+    border: 1px solid var(--border);
+  }
+  .inner-cd-label {
+    font-size: .6rem;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 1rem;
+  }
+  .inner-cd-nums {
+    display: flex;
+    align-items: flex-end;
+    gap: .5rem;
+  }
+  .icd-unit { text-align: center; flex: 1; }
+  .icd-num {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(2.2rem, 8vw, 3.5rem);
+    font-weight: 800;
+    line-height: 1;
+    transition: color .3s;
+  }
+  .icd-num.green { color: var(--accent); }
+  .icd-num.red   { color: #f87171; }
+  .icd-num.dim   { color: #555; }
+  .icd-sep {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(1.5rem, 5vw, 2.5rem);
+    font-weight: 800;
+    color: var(--border);
+    padding-bottom: .15rem;
+    flex-shrink: 0;
+  }
+  .icd-lbl {
+    font-size: .58rem;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: .3rem;
+  }
+
+  .divider { height: 1px; background: var(--border); margin: 1.25rem 0; }
+  .meta-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: .75rem;
+  }
+  .meta-key {
+    font-size: .6rem;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: .2rem;
+  }
+  .meta-val {
+    font-family: 'Syne', sans-serif;
+    font-size: .9rem;
+    font-weight: 700;
+    color: var(--text);
+  }
+  .meta-val.green { color: #4ade80; }
+  .meta-val.dim   { color: #666; }
+
+  /* PEAK ZONES */
+  .section {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 0 1.5rem 4rem;
+  }
+  .section-title {
+    font-size: .65rem;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 1rem;
+  }
+  .zones {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+  }
+  .zone-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: .9rem 1.2rem;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--surface);
+    font-size: .85rem;
+  }
+  .zone-tz {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: .8rem;
+    color: var(--text);
+    min-width: 48px;
+  }
+  .zone-range { color: var(--muted); font-size: .8rem; letter-spacing: .02em; }
+  .zone-tag {
+    font-size: .65rem;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    padding: .25rem .6rem;
+    border-radius: 999px;
+  }
+  .peak-tag   { background: rgba(239,68,68,.1); color: #f87171; }
+  .offpeak-tag{ background: rgba(184,255,87,.1); color: var(--accent); }
+
+  /* PLANS */
+  .plans {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: .5rem;
+    margin-top: .5rem;
+  }
+  @media(max-width: 500px) { .plans { grid-template-columns: repeat(2,1fr); } }
+  .plan-chip {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: .75rem 1rem;
+    text-align: center;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: .8rem;
+    color: var(--text);
+  }
+  .plan-chip.excluded {
+    opacity: .35;
+    text-decoration: line-through;
+    color: var(--muted);
+  }
+
+  /* SURFACES */
+  .surfaces {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem;
+  }
+  .surf-chip {
+    font-size: .75rem;
+    padding: .4rem .9rem;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    color: var(--muted);
+    background: var(--surface);
+  }
+  .surf-chip::before { content: '↗ '; color: var(--accent); font-size: .6rem; }
+
+  /* COUNTDOWN */
+  .countdown-block {
+    display: flex;
+    gap: .75rem;
+    justify-content: center;
+    margin: 2rem 0 1rem;
+  }
+  .count-unit {
+    text-align: center;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1rem 1.25rem;
+    min-width: 72px;
+  }
+  .count-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--accent);
+    line-height: 1;
+  }
+  .count-label {
+    font-size: .6rem;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: .4rem;
+  }
+
+  /* FAQ */
+  .faq { display: flex; flex-direction: column; gap: .5rem; }
+  .faq-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .faq-q {
+    padding: 1rem 1.25rem;
+    font-size: .85rem;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    user-select: none;
+    transition: color .2s;
+  }
+  .faq-q:hover { color: var(--accent); }
+  .faq-q .arrow {
+    font-size: .7rem;
+    transition: transform .25s;
+    color: var(--muted);
+  }
+  .faq-a {
+    display: none;
+    padding: 0 1.25rem 1rem;
+    font-size: .82rem;
+    color: var(--muted);
+    line-height: 1.65;
+    border-top: 1px solid var(--border);
+    padding-top: .75rem;
+  }
+  .faq-item.open .faq-a { display: block; }
+  .faq-item.open .arrow { transform: rotate(180deg); }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 2rem;
+    text-align: center;
+    font-size: .72rem;
+    color: var(--muted);
+    line-height: 1.8;
+  }
+  footer a { color: var(--muted); text-decoration: underline; }
+
+  /* spacing utility */
+  .mb1 { margin-bottom: 1rem; }
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="#"><span>2×</span>claude</a>
+  <div class="nav-pill"><span class="live-dot"></span> Mar 13–28, 2026</div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <h1>double <span class="accent">usage.</span> off-peak.</h1>
+  <p class="hero-sub">Claude's doubling your limits during off-peak hours — automatically, no action needed, for free.</p>
+</section>
+
+<!-- LIVE STATUS -->
+<div class="status-section">
+  <div class="status-card" id="status-card">
+    <div class="status-header">
+      <div class="status-label">your status right now</div>
+      <div class="status-badge" id="status-badge">checking...</div>
+    </div>
+    <div class="status-main" id="status-main">loading...</div>
+    <div class="status-desc" id="status-desc">figuring out your 2× eligibility</div>
+
+    <!-- BIG CONTEXTUAL COUNTDOWN -->
+    <div class="inner-cd" id="inner-cd">
+      <div class="inner-cd-label" id="icd-label">—</div>
+      <div class="inner-cd-nums">
+        <div class="icd-unit">
+          <div class="icd-num" id="icd-h">00</div>
+          <div class="icd-lbl">hours</div>
+        </div>
+        <div class="icd-sep">:</div>
+        <div class="icd-unit">
+          <div class="icd-num" id="icd-m">00</div>
+          <div class="icd-lbl">mins</div>
+        </div>
+        <div class="icd-sep">:</div>
+        <div class="icd-unit">
+          <div class="icd-num" id="icd-s">00</div>
+          <div class="icd-lbl">secs</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+    <div class="meta-grid">
+      <div class="meta-item">
+        <div class="meta-key">your local time</div>
+        <div class="meta-val" id="meta-localtime">—</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-key">ET time</div>
+        <div class="meta-val" id="meta-ettime">—</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-key">usage multiplier</div>
+        <div class="meta-val" id="meta-mult">—</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-key">bonus vs weekly cap</div>
+        <div class="meta-val dim">doesn't count</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- COUNTDOWN -->
+<div class="section">
+  <div class="section-title">time left in promo</div>
+  <div class="countdown-block">
+    <div class="count-unit"><div class="count-num" id="cd-d">—</div><div class="count-label">days</div></div>
+    <div class="count-unit"><div class="count-num" id="cd-h">—</div><div class="count-label">hours</div></div>
+    <div class="count-unit"><div class="count-num" id="cd-m">—</div><div class="count-label">mins</div></div>
+    <div class="count-unit"><div class="count-num" id="cd-s">—</div><div class="count-label">secs</div></div>
+  </div>
+  <div style="text-align:center;font-size:.75rem;color:var(--muted)">ends march 28, 2026 · 11:59 pm pt</div>
+</div>
+
+<!-- PEAK WINDOWS -->
+<div class="section">
+  <div class="section-title">peak hours (standard limits apply)</div>
+  <div class="zones">
+    <div class="zone-row">
+      <span class="zone-tz">ET</span>
+      <span class="zone-range">8:00 am – 2:00 pm</span>
+      <span class="zone-tag peak-tag">peak</span>
+    </div>
+    <div class="zone-row">
+      <span class="zone-tz">PT</span>
+      <span class="zone-range">5:00 am – 11:00 am</span>
+      <span class="zone-tag peak-tag">peak</span>
+    </div>
+    <div class="zone-row">
+      <span class="zone-tz">GMT</span>
+      <span class="zone-range">12:00 pm – 6:00 pm</span>
+      <span class="zone-tag peak-tag">peak</span>
+    </div>
+    <div class="zone-row" style="border-color:rgba(184,255,87,.2)">
+      <span class="zone-tz" style="color:var(--accent)">ALL</span>
+      <span class="zone-range">outside the above windows</span>
+      <span class="zone-tag offpeak-tag">2× off-peak</span>
+    </div>
+  </div>
+  <div style="margin-top:.75rem;font-size:.72rem;color:var(--muted)">weekdays only · weekends use standard limits</div>
+</div>
+
+<!-- ELIGIBLE PLANS -->
+<div class="section">
+  <div class="section-title">eligible plans</div>
+  <div class="plans">
+    <div class="plan-chip">Free</div>
+    <div class="plan-chip">Pro</div>
+    <div class="plan-chip">Max</div>
+    <div class="plan-chip">Team</div>
+  </div>
+  <div style="margin-top:.75rem;font-size:.72rem;color:var(--muted)">Enterprise plans excluded from this promo</div>
+</div>
+
+<!-- SURFACES -->
+<div class="section">
+  <div class="section-title">where 2× applies</div>
+  <div class="surfaces">
+    <div class="surf-chip">Claude Web</div>
+    <div class="surf-chip">Claude Desktop</div>
+    <div class="surf-chip">Claude Mobile</div>
+    <div class="surf-chip">Cowork</div>
+    <div class="surf-chip">Claude Code</div>
+    <div class="surf-chip">Claude for Excel</div>
+    <div class="surf-chip">Claude for PowerPoint</div>
+  </div>
+</div>
+
+<!-- FAQ -->
+<div class="section">
+  <div class="section-title">faq</div>
+  <div class="faq">
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)">do i need to do anything to get 2×? <span class="arrow">▼</span></div>
+      <div class="faq-a">nope. the promotion applies automatically. you'll see higher limits outside peak hours without any changes to your account settings.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)">does bonus usage count against my weekly limit? <span class="arrow">▼</span></div>
+      <div class="faq-a">no. the additional usage you get during off-peak hours doesn't count toward any weekly usage limits on your plan.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)">what happens when the promo ends? <span class="arrow">▼</span></div>
+      <div class="faq-a">after march 28, usage limits return to standard levels at all hours. no change to your plan or billing.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)">does it apply on weekends? <span class="arrow">▼</span></div>
+      <div class="faq-a">nope — the 2× promo is weekdays only. weekends use standard limits the whole time.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)">i'm on enterprise. do i get this? <span class="arrow">▼</span></div>
+      <div class="faq-a">enterprise plans are excluded from this promotion. it applies to free, pro, max, and team plans only.</div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  valid march 13–28, 2026 · free, pro, max, and team plans only · no cash value · not transferable ·<br/>
+  may not be combined with other offers · usage reverts to standard after march 28 at 11:59 pm pt
+</footer>
+
+<script>
+function toggle(el){ el.closest('.faq-item').classList.toggle('open'); }
+function pad(n){ return String(n).padStart(2,'0'); }
+function fmt12(h,m){
+  const ampm=h>=12?'pm':'am';
+  return `${h%12||12}:${pad(m)} ${ampm}`;
+}
+
+function updateAll(){
+  const now=new Date();
+  // ET = UTC-5 (EST). Promo dates are in March so no EDT adjustment needed.
+  const utcMs=now.getTime()+now.getTimezoneOffset()*60000;
+  const etDate=new Date(utcMs+(-5*60)*60000);
+  const etH=etDate.getHours();
+  const etM=etDate.getMinutes();
+  const etS=etDate.getSeconds();
+  const day=etDate.getDay(); // 0=Sun,6=Sat
+  const isWeekday=day>=1&&day<=5;
+  const isPeak=isWeekday&&etH>=8&&etH<14;
+  const isWeekend=!isWeekday;
+
+  // ---- elements ----
+  const card=document.getElementById('status-card');
+  const badge=document.getElementById('status-badge');
+  const main=document.getElementById('status-main');
+  const desc=document.getElementById('status-desc');
+  const mult=document.getElementById('meta-mult');
+  const icdLabel=document.getElementById('icd-label');
+  const icdH=document.getElementById('icd-h');
+  const icdM=document.getElementById('icd-m');
+  const icdS=document.getElementById('icd-s');
+  const numEls=[icdH,icdM,icdS];
+
+  document.getElementById('meta-localtime').textContent=now.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+  document.getElementById('meta-ettime').textContent=fmt12(etH,etM)+' ET';
+
+  let secsLeft=0;
+
+  if(isWeekend){
+    // seconds until Monday 2 PM ET (off-peak after Monday peak)
+    // actually show: seconds until Monday 8AM ET when peak starts so they know when to come back
+    const daysUntilMon=day===0?1:8-day; // Sun=1, Sat=2
+    const mondayPeakStart=new Date(etDate);
+    mondayPeakStart.setDate(etDate.getDate()+daysUntilMon);
+    mondayPeakStart.setHours(14,0,0,0); // Monday 2PM ET = first off-peak
+    secsLeft=Math.max(0,Math.floor((mondayPeakStart-etDate)/1000));
+    icdLabel.textContent='2× resumes in (monday off-peak)';
+    numEls.forEach(el=>{ el.className='icd-num dim'; });
+    card.className='status-card is-weekend';
+    badge.className='status-badge badge-weekend'; badge.textContent='weekend';
+    main.textContent="it's the weekend. standard limits.";
+    desc.textContent="promo is weekdays only — 2× resumes monday off-peak.";
+    mult.textContent='1×'; mult.className='meta-val dim';
+  } else if(isPeak){
+    // seconds until 2 PM ET today
+    const peakEndSecs=(14*3600)-(etH*3600+etM*60+etS);
+    secsLeft=Math.max(0,peakEndSecs);
+    icdLabel.textContent='2× off-peak starts in';
+    numEls.forEach(el=>{ el.className='icd-num red'; });
+    card.className='status-card is-peak';
+    badge.className='status-badge badge-peak'; badge.textContent='peak hours';
+    main.textContent="you're in peak hours rn.";
+    desc.textContent="standard limits active — 2× kicks in automatically when peak ends.";
+    mult.textContent='1×'; mult.className='meta-val dim';
+  } else {
+    // off-peak on a weekday — show time until next peak (8 AM ET)
+    let secsToPeak;
+    if(etH<8){
+      // before 8AM today
+      secsToPeak=(8*3600)-(etH*3600+etM*60+etS);
+    } else {
+      // after 2PM, next peak is 8AM tomorrow (or Monday if Friday)
+      const secsToMidnight=(24*3600)-(etH*3600+etM*60+etS);
+      const daysTil8=day===5?3:1; // Friday → skip weekend → Monday
+      secsToPeak=secsToMidnight+(daysTil8-1)*86400+8*3600;
+    }
+    secsLeft=Math.max(0,secsToPeak);
+    icdLabel.textContent='2× active · peak starts in';
+    numEls.forEach(el=>{ el.className='icd-num green'; });
+    card.className='status-card is-active';
+    badge.className='status-badge badge-active'; badge.textContent='2× active ✦';
+    main.textContent="you're in the 2× zone. go off.";
+    desc.textContent="off-peak hours active — usage limits doubled automatically. no action needed.";
+    mult.textContent='2×'; mult.className='meta-val green';
+  }
+
+  // render big countdown
+  const h=Math.floor(secsLeft/3600);
+  const m=Math.floor((secsLeft%3600)/60);
+  const s=secsLeft%60;
+  icdH.textContent=pad(h);
+  icdM.textContent=pad(m);
+  icdS.textContent=pad(s);
+
+  // promo-end countdown (smaller, in the section below)
+  const promoEnd=new Date('2026-03-29T07:59:00Z');
+  const diff=promoEnd-now;
+  if(diff>0){
+    const pd=Math.floor(diff/86400000);
+    const ph=Math.floor((diff%86400000)/3600000);
+    const pm=Math.floor((diff%3600000)/60000);
+    const ps=Math.floor((diff%60000)/1000);
+    document.getElementById('cd-d').textContent=pad(pd);
+    document.getElementById('cd-h').textContent=pad(ph);
+    document.getElementById('cd-m').textContent=pad(pm);
+    document.getElementById('cd-s').textContent=pad(ps);
+  } else {
+    ['cd-d','cd-h','cd-m','cd-s'].forEach(id=>document.getElementById(id).textContent='00');
+  }
+}
+
+updateAll();
+setInterval(updateAll,1000);
+</script>
+</body>
+</html>
