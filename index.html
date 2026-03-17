@@ -590,9 +590,9 @@ function fmt12(h,m){
 
 function updateAll(){
   const now=new Date();
-  // ET = UTC-5 (EST). Promo dates are in March so no EDT adjustment needed.
+  // March 13-28 is inside EDT (clocks spring forward Mar 8) so ET = UTC-4
   const utcMs=now.getTime()+now.getTimezoneOffset()*60000;
-  const etDate=new Date(utcMs+(-5*60)*60000);
+  const etDate=new Date(utcMs+(-4*60)*60000);
   const etH=etDate.getHours();
   const etM=etDate.getMinutes();
   const etS=etDate.getSeconds();
@@ -614,24 +614,23 @@ function updateAll(){
   const numEls=[icdH,icdM,icdS];
 
   document.getElementById('meta-localtime').textContent=now.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
-  document.getElementById('meta-ettime').textContent=fmt12(etH,etM)+' ET';
+  document.getElementById('meta-ettime').textContent=fmt12(etH,etM)+' EDT';
 
   let secsLeft=0;
 
   if(isWeekend){
-    // seconds until Monday 2 PM ET (off-peak after Monday peak)
-    // actually show: seconds until Monday 8AM ET when peak starts so they know when to come back
-    const daysUntilMon=day===0?1:8-day; // Sun=1, Sat=2
-    const mondayPeakStart=new Date(etDate);
-    mondayPeakStart.setDate(etDate.getDate()+daysUntilMon);
-    mondayPeakStart.setHours(14,0,0,0); // Monday 2PM ET = first off-peak
-    secsLeft=Math.max(0,Math.floor((mondayPeakStart-etDate)/1000));
-    icdLabel.textContent='2× resumes in (monday off-peak)';
+    // Weekend — 2× resumes Monday after peak ends (2PM ET)
+    const daysUntilMon=day===0?1:2; // Sun→1 day, Sat→2 days
+    const mondayOffPeakStart=new Date(etDate);
+    mondayOffPeakStart.setDate(etDate.getDate()+daysUntilMon);
+    mondayOffPeakStart.setHours(14,0,0,0); // Monday 2PM ET = end of peak = 2× resumes
+    secsLeft=Math.max(0,Math.floor((mondayOffPeakStart-etDate)/1000));
+    icdLabel.textContent='2× resumes in (mon 2pm et)';
     numEls.forEach(el=>{ el.className='icd-num dim'; });
     card.className='status-card is-weekend';
     badge.className='status-badge badge-weekend'; badge.textContent='weekend';
     main.textContent="it's the weekend. standard limits.";
-    desc.textContent="promo is weekdays only — 2× resumes monday off-peak.";
+    desc.textContent="promo is weekdays only — 2× resumes monday after peak ends (2pm et).";
     mult.textContent='1×'; mult.className='meta-val dim';
   } else if(isPeak){
     // seconds until 2 PM ET today
